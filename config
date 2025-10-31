@@ -1,0 +1,42 @@
+programs.jujutsu = {
+  enable = true;
+  package = pkgs.unstable.jujutsu;
+  settings = {
+    user = {
+      name = "NAME";
+      email = "email";
+      sign_commits = true;
+    }; # user
+    signing = {
+      behavior = "own"; # my own commits are re-signed after modifications, not those of others I modify
+      backend = "gpg";
+      key = "KEY";
+    };
+    git = {
+      sign-on-push = true;
+    };
+    ui = {
+      diff-editor = ["nvim" "-c" "DiffEditor $left $right $output"];
+      show-cryptographic-signatures = true;
+      default-command = ["log" "--no-pager"];
+    }; # ui
+    merge-tools = {
+      diffconflicts = {
+        program = "nvim";
+        merge-args = [
+          "-c" "let g:jj_diffconflicts_marker_length=$marker_length"
+          "-c" "JJDiffConflicts!" "$output" "$base" "$left" "$right"
+        ];
+        merge-tool-edits-conflict-markers = true;
+      };
+    }; # merge-tools
+  }; # settings
+};
+home.file."jujutsu-scope-iohk" = {
+  target = ".config/jj/conf.d/iohk.toml";
+  text = ''
+    --when.repositories = [ "~/git/iohk" ]
+    [user]
+    email = "EMAIL"
+  '';
+};
