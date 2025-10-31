@@ -1,2 +1,2 @@
-a line of text
+A line of text.
 last line of text
